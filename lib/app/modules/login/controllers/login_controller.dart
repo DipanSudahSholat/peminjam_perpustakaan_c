@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:peminjam_perpustakaan_c/app/data/model/response_login.dart';
 
 import '../../../data/constant/endpoint.dart';
 import '../../../data/provider/api_provider.dart';
@@ -47,7 +48,9 @@ class LoginController extends GetxController {
                 {"username": usernameController.text.toString(),
                   "password": passwordController.text.toString()}));
         if(response.statusCode == 200) {
+          ResponseLogin responseLogin = ResponseLogin.fromJson(response.data);
           await StorageProvider.write(StorageKey.status, "logged");
+          await StorageProvider.write(StorageKey.idUser, responseLogin.data!.id!.toString());
           Get.offAllNamed(Routes.HOME);
         } else {
           Get.snackbar("Sorry", "Login Gagal", backgroundColor: Colors.orange);
